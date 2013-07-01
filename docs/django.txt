@@ -1,0 +1,39 @@
+**Django Setup**
+
+Add the disredis code to the django app. 
+
+Add the following to django settings
+
+    SESSION_COOKIE_AGE = 2592000 # thirty days - Adjust to your needs
+
+    SESSION_REDIS_PREFIX = '<REPLACE - e.g. mysessions>'
+    SESSION_REDIS_HOST = 'localhost'
+    SESSION_REDIS_DB = 6
+
+    SESSION_ENGINE = 'disredis_sessions.session'
+
+    SESSION_REDIS_SENTINEL_URLS = [
+        'SENTINEL_SERVER:SENTINEL_PORT',
+        ...]
+
+Restart django to start using Redis for user sessions
+
+**Troubleshooting**
+
+Ensure the django application servers can connect to the redis and sentinel ports. 
+
+Run the following command on the redis servers to check all redis instances are listed (check IP and master/slave status):
+
+    $ redis-cli -p <SENTINEL PORT, e.g. 26379> sentinel master
+
+
+
+
+
+
+
+
+
+
+
+

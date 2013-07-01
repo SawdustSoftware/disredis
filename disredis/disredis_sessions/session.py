@@ -5,18 +5,14 @@ except ImportError:  # Python 3.*
     from django.utils.encoding import force_text as force_unicode
 from django.contrib.sessions.backends.base import SessionBase, CreateError
 
-from disredis.client import DisredisClient
+from disredis.disredis_client.client import DisredisClient
 
-from disredis_sessions import settings
-
+from disredis.disredis_sessions import settings
 
 # Avoid new redis connection on each request
 
-
 if settings.SESSION_REDIS_SENTINEL_URLS is not None:
     redis_server = DisredisClient(settings.SESSION_REDIS_SENTINEL_URLS)
-
-
 
 class SessionStore(SessionBase):
     """

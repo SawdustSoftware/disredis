@@ -6,7 +6,7 @@ from unittest import TestCase
 
 from redis.exceptions import ConnectionError
 
-from disredis.client import DisredisClient, Node
+from disredis.disredis_client.client import DisredisClient, Node
 
 class MockStrictRedis(object):
     """
