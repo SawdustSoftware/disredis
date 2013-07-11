@@ -40,7 +40,7 @@ class Node(object):
 
 def executeOnNode(func):
     """
-    Decorator that will cause the function to be executed on the proper 
+    Decorator that will cause the function to be executed on the proper
     redis node. In the case of a Connection failure, it will attempt to find
     a new master node and perform the action there.
     """
@@ -106,7 +106,7 @@ class DisredisClient(object):
             except ConnectionError:
                 self.sentinel = None
                 if self.sentinel_addresses:
-                    self.sentinel_addresses.pop() # pull the current connection off
+                    self.sentinel_addresses.pop()  # pull the current connection off
                 else:
                     raise
 
@@ -180,7 +180,7 @@ class DisredisClient(object):
         holding the lock.
         """
 
-    @executeOnNode # use the shard_hint for the key.
+    @executeOnNode  # use the shard_hint for the key.
     def pubsub(self, shard_hint=None):
         """
         Return a Publish/Subscribe object. With this object, you can
