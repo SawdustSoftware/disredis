@@ -1,18 +1,20 @@
 import redis
-try:
-    from django.utils.encoding import force_unicode
-except ImportError:  # Python 3.*
-    from django.utils.encoding import force_text as force_unicode
+
 from django.contrib.sessions.backends.base import SessionBase, CreateError
+try:
+    from django.utils.encoding import force_text
+except ImportError:  # Backwards compatibility for Django <1.5
+    from django.utils.encoding import force_unicode as force_text
 
 from disredis.disredis_client.client import DisredisClient
-
 from disredis.disredis_sessions import settings
+
 
 # Avoid new redis connection on each request
 
 if settings.SESSION_REDIS_SENTINEL_URLS is not None:
     redis_server = DisredisClient(settings.SESSION_REDIS_SENTINEL_URLS)
+
 
 class SessionStore(SessionBase):
     """
@@ -28,7 +30,7 @@ class SessionStore(SessionBase):
             session_data = self.server.get(
                 self.get_real_stored_key(self._get_or_create_session_key())
             )
-            return self.decode(force_unicode(session_data))
+            return self.decode(force_text(session_data))
         except:
             self.create()
             return {}
@@ -44,12 +46,14 @@ class SessionStore(SessionBase):
                 self.save(must_create=True)
             except CreateError:
                 continue
+
             self.modified = True
             return
 
     def save(self, must_create=False):
         if must_create and self.exists(self._get_or_create_session_key()):
             raise CreateError
+
         data = self.encode(self._get_session(no_load=must_create))
         if redis.VERSION[0] >= 2:
             self.server.setex(
