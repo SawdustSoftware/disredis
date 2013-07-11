@@ -1,0 +1,4 @@
+[run]
+branch = True
+source = .
+omit = */nose/*,*/redis/*,*/coverage/*,tests_*,runtests.py,*/setup*
